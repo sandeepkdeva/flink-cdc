@@ -5,7 +5,7 @@ plugins {
 
 }
 
-group = "com.attentive.dp"
+group = "com.atntv.dp"
 version = "1.0-SNAPSHOT"
 
 
@@ -14,13 +14,14 @@ val log4jVersion = "2.17.1"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 tasks.named<Jar>("jar") {
     enabled = false
 }
 
 application {
-    mainClass.set("com.attentive.dp.CDCPull")
+    mainClass.set("com.atntv.dp.CDCPull")
 }
 
 tasks.shadowJar {
@@ -34,7 +35,7 @@ tasks.shadowJar {
         exclude(dependency("log4j:.*"))
     }
     manifest {
-        attributes["Main-Class"] = "com.attentive.ep.JDBCPull"
+        attributes["Main-Class"] = "com.atntv.dp.CDCPull"
     }
     mergeServiceFiles()
 }
@@ -48,7 +49,13 @@ dependencies {
     implementation("org.apache.flink:flink-connector-files:${flinkVersion}")
 
     implementation("org.postgresql:postgresql:42.2.25")
-    implementation("com.ververica:flink-connector-postgres-cdc:2.3.0")
+    //implementation("com.ververica:flink-connector-postgres-cdc:2.4.2")
+    implementation("com.ververica:flink-connector-postgres-cdc:2.4.3-SNAPSHOT")
+    {
+        exclude(group="org.apache.flink", module = "flink-shaded-guava")
+    }
+    //implementation("io.debezium:debezium-core:2.0.0.Final")
+   // implementation(files("/Users/sdeva/workspace/flink-cdc-connectors/flink-cdc-connect/flink-cdc-source-connectors/flink-connector-postgres-cdc/target/flink-connector-postgres-cdc-3.0-SNAPSHOT.jar"))
 
     runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")
     runtimeOnly("org.apache.logging.log4j:log4j-api:${log4jVersion}")
